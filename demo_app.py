@@ -64,7 +64,7 @@ if result:
 
     st.subheader("Observations")
     status_filter = st.segmented_control("Display", options=["All", "Warnings", "Passed", "Informational"], default="All")
-    active = {"All": None, "Warnings": "WARN", "Passed": "PASS", "Informational": "INFO"}[status_filter]
+    active = {"All": None, "Warnings": "WARN", "Passed": "PASS", "Informational": "INFO"}.get(status_filter)
     for item in result.findings:
         if active and item.status != active:
             continue

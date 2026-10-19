@@ -7,3 +7,10 @@ __pycache__/
 .env
 .env.*
 !*.env.example
+.local-backup/
+.local-tools/
+reports/
+*.log
+.coverage
+htmlcov/
+node_modules/

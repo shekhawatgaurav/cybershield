@@ -1,0 +1,40 @@
+name: CyberShield tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.10', '3.12', '3.14']
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run dependency-free offline tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate Python syntax
+        run: python -m compileall -q app.py demo_app.py cybershield tests tools
+      - name: Check static JavaScript syntax
+        run: |
+          node --check docs/app.js
+          node --check docs/demo-data.js
+      - name: Verify generated fixtures are current
+        run: |
+          python tools/build_demo.py
+          git diff --exit-code -- docs/demo-data.js examples
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -p test_dashboard.py -v

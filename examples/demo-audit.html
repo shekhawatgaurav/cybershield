@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CyberShield | Audit report</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#080e1b;color:#e9f0fa;font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrapper{width:min(1040px,calc(100% - 36px));margin:46px auto 90px}
+.brand{letter-spacing:.15em;color:#5be0c4;font-weight:800;font-size:13px}h1{font-size:clamp(32px,5vw,54px);margin:6px 0 4px;letter-spacing:-.045em}
+.sub{color:#9eabc0;margin:0 0 24px;word-break:break-word}.demo{padding:11px 15px;border:1px solid #8a6b2b;background:#3b3017;color:#ffe2a0;border-radius:9px;margin:16px 0}
+.hero{display:grid;grid-template-columns:200px 1fr;gap:16px;margin:28px 0}.score{background:linear-gradient(135deg,#153f48,#101c33);border:1px solid #287469;border-radius:18px;padding:24px;text-align:center}
+.score strong{display:block;font-size:70px;line-height:1;font-weight:850;color:#75e4c9;letter-spacing:-.08em}.score span{font-size:14px;color:#a4bac6}.score b{display:block;font-size:28px;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.stat{background:#131e31;border:1px solid #2a3850;border-radius:14px;padding:18px}
+.stat strong{font-size:30px;display:block}.stat span{color:#a0b2c8;font-size:13px}
+.meta{background:#10192a;border:1px solid #24354a;border-radius:12px;padding:16px 20px;color:#b9c8d8;word-break:break-all}
+h2{font-size:21px;margin:38px 0 16px}.finding{border:1px solid #293c55;background:#101c2d;border-radius:12px;padding:18px 20px;margin:11px 0}
+.finding-head{display:flex;justify-content:space-between;align-items:center;gap:18px}.finding p{color:#c0ccdc;margin:9px 0}.finding small{display:block;color:#95a8be;margin-top:8px}
+.pill{border-radius:50px;padding:5px 12px;font-size:11px;font-weight:800;white-space:nowrap;letter-spacing:.08em}.pill.warn{color:#ffcc84;background:#4b321c}.pill.pass{color:#6becbf;background:#153e36}.pill.info{color:#a7c8ff;background:#243554}
+.footer{border-top:1px solid #293c55;color:#8194ac;font-size:12px;margin-top:38px;padding-top:20px}
+@media(max-width:620px){.hero{grid-template-columns:1fr}.score strong{font-size:56px}}
+@media print{:root{color-scheme:light}body{background:#fff;color:#161616}.finding,.stat,.meta,.score{background:#fff;color:#222;border-color:#aaa}.finding p,.sub,.stat span,.finding small,.score span{color:#444}}
+</style></head>
+<body><main class="wrapper"><div class="brand">◈ CYBERSHIELD / SECURITY INTELLIGENCE</div>
+<h1>Security audit report</h1><p class="sub">https://demo.example/</p><div class="demo">DEMO DATA — SIMULATED results, not an actual website scan</div>
+<div class="hero"><div class="score"><span>CONFIGURATION SCORE</span><strong>43</strong><b>GRADE D</b></div>
+<div class="stats"><div class="stat"><strong>9</strong><span>Checks completed</span></div>
+<div class="stat"><strong>5</strong><span>Items needing review</span></div>
+<div class="stat"><strong>3</strong><span>Observed safeguards</span></div>
+<div class="stat"><strong>1</strong><span>Informational observations</span></div></div></div>
+<div class="meta"><b>Target:</b> https://demo.example/<br><b>HTTP status:</b> 200<br>
+<b>Audited:</b> 2026-10-19T00:00:00+00:00<br><b>Request duration:</b> 0 ms<br>
+<b>Redirects followed:</b> 0</div>
+<h2>Configuration review</h2><article class="finding"><div class="finding-head"><strong>HTTPS transport</strong><span class="pill pass">PASS</span></div><p>The observed response was delivered over HTTPS.</p><small><b>Recommendation:</b> Continue enforcing HTTPS.</small></article><article class="finding"><div class="finding-head"><strong>HSTS policy</strong><span class="pill warn">WARN / MEDIUM</span></div><p>The Strict-Transport-Security header was not observed.</p><small><b>Recommendation:</b> Consider HSTS with an appropriate max-age after verifying HTTPS readiness.</small></article><article class="finding"><div class="finding-head"><strong>Content Security Policy</strong><span class="pill warn">WARN / MEDIUM</span></div><p>No enforced Content-Security-Policy response header was observed.</p><small><b>Recommendation:</b> Review restrictive CSP directives, including script-src and object-src, for your application.</small></article><article class="finding"><div class="finding-head"><strong>MIME sniffing protection</strong><span class="pill pass">PASS</span></div><p>X-Content-Type-Options: nosniff is present.</p><small><b>Recommendation:</b> Set X-Content-Type-Options: nosniff on applicable responses.</small></article><article class="finding"><div class="finding-head"><strong>Anti-framing control</strong><span class="pill warn">WARN / MEDIUM</span></div><p>No supported anti-framing restriction was observed.</p><small><b>Recommendation:</b> Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.</small></article><article class="finding"><div class="finding-head"><strong>Referrer policy</strong><span class="pill pass">PASS</span></div><p>A Referrer-Policy header is present; its value should be reviewed.</p><small><b>Recommendation:</b> Consider strict-origin-when-cross-origin or stricter based on site requirements.</small></article><article class="finding"><div class="finding-head"><strong>Browser permissions policy</strong><span class="pill info">INFO</span></div><p>No Permissions-Policy header was observed. This is a hardening opportunity, not proof of a vulnerability.</p><small><b>Recommendation:</b> Consider limiting browser features (camera, microphone, geolocation) when appropriate.</small></article><article class="finding"><div class="finding-head"><strong>CORS origin behavior</strong><span class="pill warn">WARN / HIGH</span></div><p>The server echoed an arbitrary Origin and enabled credentialed sharing on this response.</p><small><b>Recommendation:</b> Use a strict trusted-origin allowlist; review endpoints containing sensitive data.</small><small><b>Evidence:</b> Arbitrary origin reflected with Access-Control-Allow-Credentials: true</small></article><article class="finding"><div class="finding-head"><strong>Cookie flags: demo_session</strong><span class="pill warn">WARN / MEDIUM</span></div><p>Cookie attributes need review: Secure, HttpOnly (may be intentional for JavaScript-readable cookies).</p><small><b>Recommendation:</b> Review Secure, HttpOnly and SameSite based on the cookie&#x27;s actual purpose.</small><small><b>Evidence:</b> Cookie name: demo_session</small></article>
+<div class="footer">Generated by CyberShield 1.0 · Indicative page-level configuration audit only.
+Not a penetration test or certification. Scores are heuristic. No cookie values are retained.</div>
+</main></body></html>
