@@ -1,0 +1,2 @@
+# Needed for the dashboard only; CLI scanner and tests use Python's standard library.
+streamlit>=1.42,<2
