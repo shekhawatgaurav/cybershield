@@ -26,7 +26,7 @@ The public demo uses **simulated findings only**. It never accepts target URLs o
 - Public-address checks, same-host/www redirect scope, three-redirect limit and eight-second socket timeout.
 - JSON and self-contained HTML reports, severity labels and recommendations.
 - Local Streamlit dashboard with authorization confirmation and an offline demo.
-- Responsive static dashboard: two simulated configurations, score chart, severity bars, header filters, CORS/cookie observations and JSON download.
+- Responsive static dashboard: two simulated configurations, score chart, severity bars, searchable header filters, CORS/cookie observations, a guided demo audit, JSON/HTML/CSV downloads and print-to-PDF.
 
 ## Technology and architecture
 

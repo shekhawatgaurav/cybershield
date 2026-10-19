@@ -7,7 +7,8 @@
   const badge = f => `<span class="badge ${f.status === "WARN" ? f.severity.toLowerCase() : f.status.toLowerCase()}">${f.status === "WARN" ? `${f.severity.toLowerCase()} · review` : f.status === "PASS" ? "Passed" : "Informational"}</span>`;
   function renderHeaders() {
     const filter = byId("filter").value;
-    const findings = data[selected].findings.filter(f => !f.key.startsWith("cookie") && f.key !== "cors" && (filter === "ALL" || f.status === filter));
+    const query = byId("search").value.trim().toLowerCase();
+    const findings = data[selected].findings.filter(f => !f.key.startsWith("cookie") && f.key !== "cors" && (filter === "ALL" || f.status === filter) && `${f.title} ${f.detail}`.toLowerCase().includes(query));
     byId("header-rows").innerHTML = findings.map(f => `<tr><td>${escape(f.title)}</td><td>${escape(f.detail)}</td><td>${badge(f)}</td></tr>`).join("");
     byId("empty").hidden = findings.length > 0;
   }
@@ -35,16 +36,50 @@
     byId("recommendation-list").innerHTML = warnings.length ? warnings.map((f,i) => `<article class="recommendation"><span class="number">${String(i+1).padStart(2,"0")}</span><div><h3>${escape(f.title)}</h3><p>${escape(f.recommendation)}</p></div>${badge(f)}</article>`).join("") : '<p class="muted">No warnings in this improved fixture. Continue reviewing application behavior, policy values and authenticated routes; a score of 100 does not guarantee security.</p>';
     byId("status").textContent = `Simulated ${selected} configuration loaded. Score ${result.score} of 100; ${result.summary.warnings} warnings.`;
   }
-  byId("scenario").addEventListener("change", event => {selected = event.target.value; render();});
+  byId("scenario").addEventListener("change", event => {selected = event.target.value; render(); byId("demo-progress").textContent = "Sample configuration changed | Ready to run the demo or export";});
   byId("filter").addEventListener("change", renderHeaders);
   byId("export").disabled = false;
+  function htmlReport(result) {
+    const rows = result.findings.map(f => `<article><h2>${escape(f.title)} <small>${escape(f.status)} / ${escape(f.severity)}</small></h2><p>${escape(f.detail)}</p><p><b>Recommendation:</b> ${escape(f.recommendation)}</p>${f.evidence ? `<p><b>Evidence:</b> ${escape(f.evidence)}</p>` : ""}</article>`).join("");
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CyberShield simulated audit report</title><style>body{font:15px/1.7 system-ui,sans-serif;color:#172436;max-width:960px;margin:40px auto;padding:0 24px}header{border-bottom:3px solid #3278e6;padding-bottom:24px}h1{font-size:32px}h2{font-size:18px}small{font-size:12px;color:#53657c}article{border-bottom:1px solid #ccd5e1;padding:16px 0;break-inside:avoid}.notice{padding:12px;background:#eaf2ff}footer{margin:30px 0;color:#53657c}@media print{body{margin:0}}</style></head><body><header><small>CYBERSHIELD / AUTOMATED WEB SCANNER</small><h1>Security configuration report</h1><p class="notice"><strong>SIMULATED DATA.</strong> No real website was scanned. Scenario: ${escape(selected)}.</p><p>Sample target: ${escape(result.final_url)}<br>Configuration score: <b>${result.score}/100 | Grade ${escape(result.grade)}</b><br>Checks: ${result.summary.total_checks} | Warnings: ${result.summary.warnings} | Passed: ${result.summary.passed}</p></header>${rows}<footer>${escape(result.disclaimer)}<p>Scoring: start at 100; subtract 17 per high, 10 per medium and 5 per low warning, with a floor of zero. Fixture date: ${escape(result.scanned_at)} (not a live scan timestamp).</p></footer></body></html>`;
+  }
+  byId("search").addEventListener("input", renderHeaders);
+  byId("print").addEventListener("click", () => window.print());
+  byId("run-demo").addEventListener("click", async () => {
+    const button = byId("run-demo");
+    button.disabled = true;
+    byId("scenario").disabled = true;
+    byId("demo-progress").classList.add("running");
+    const stages = ["SIMULATION 1/3 | Loading synthetic response headers...", "SIMULATION 2/3 | Reviewing header, CORS and cookie observations...", "SIMULATION 3/3 | Preparing score and recommendations..."];
+    for (const stage of stages) {
+      byId("demo-progress").textContent = stage;
+      await new Promise(resolve => setTimeout(resolve, 400));
+    }
+    render();
+    byId("demo-progress").textContent = `Demo complete | ${data[selected].summary.total_checks} checks | ${data[selected].summary.warnings} review items | No network scan performed`;
+    byId("demo-progress").classList.remove("running");
+    button.disabled = false;
+    byId("scenario").disabled = false;
+    button.textContent = "Run demo again";
+  });
   byId("export").addEventListener("click", () => {
-    const url = URL.createObjectURL(new Blob([JSON.stringify(data[selected], null, 2)], {type:"application/json"}));
+    const result = data[selected];
+    const format = byId("export-format").value;
+    const csvCell = value => '"' + String(value).replace(/"/g, '""') + '"';
+    const csvRows = [["Mode", "Scenario", "Control", "Status", "Severity", "Observation", "Recommendation", "Evidence"], ...result.findings.map(f => ["SIMULATED", selected, f.title, f.status, f.severity, f.detail, f.recommendation, f.evidence])];
+    const formats = {
+      json: [JSON.stringify(result, null, 2), "application/json"],
+      html: [htmlReport(result), "text/html"],
+      csv: ["\ufeff" + csvRows.map(row => row.map(csvCell).join(",")).join("\r\n"), "text/csv;charset=utf-8"]
+    };
+    const [content, type] = formats[format];
+    const url = URL.createObjectURL(new Blob([content], {type}));
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `cybershield-${selected}-simulated.json`;
+    anchor.download = `cybershield-${selected}-simulated.${format}`;
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+    byId("demo-progress").textContent = `${format.toUpperCase()} sample report prepared | ${result.findings.length} observations | Simulated data only`;
   });
   function updateNavigation() {
     const hash = location.hash || "#overview";

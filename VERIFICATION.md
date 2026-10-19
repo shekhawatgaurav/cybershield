@@ -19,3 +19,7 @@ The first dashboard test run failed because relative AppTest paths resolved with
 No live security scans were performed. DNS, HTTP and CORS test targets are mocked; results do not establish coverage of all browsers, websites or security threats. Streamlit dependencies and temporary browser tooling are installed only locally and are not committed. Browser tooling is not a runtime project dependency.
 
 GitHub CI and Pages deployment status must be assessed on the actual published commit, independently of these local checks.
+
+## Dashboard upgrade verification
+
+The updated cobalt/navy interface was checked in Microsoft Edge on 19 October 2026. Browser checks passed for both guided demo scenarios, header search and its empty state, JSON/HTML/CSV download contents, and the Print/PDF button invoking browser printing. Duplicate element IDs were checked. Responsive checks passed at all six existing viewport widths. Desktop and mobile screenshots were refreshed. No Python engine changes or new runtime dependencies were introduced.
