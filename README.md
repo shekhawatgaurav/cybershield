@@ -6,9 +6,9 @@ A small Python website configuration auditor with a local Streamlit dashboard an
 
 The public demo uses **simulated findings only**. It never accepts target URLs or performs scans. Use the Python tool locally, only against a website you own or are explicitly authorized to assess.
 
-![CyberShield simulated dashboard](docs/assets/dashboard-desktop.png)
+![CyberShield light-theme landing page](docs/assets/landing-desktop.png)
 
-[Mobile screenshot](docs/assets/dashboard-mobile.png)
+[Mobile landing page](docs/assets/landing-mobile.png) / [Interactive audit dashboard](docs/assets/dashboard-desktop.png)
 
 ## Objectives
 
@@ -26,6 +26,7 @@ The public demo uses **simulated findings only**. It never accepts target URLs o
 - Public-address checks, same-host/www redirect scope, three-redirect limit and eight-second socket timeout.
 - JSON and self-contained HTML reports, severity labels and recommendations.
 - Local Streamlit dashboard with authorization confirmation and an offline demo.
+- Light-themed landing page with capabilities, workflow, methodology, resources and accessible FAQs.
 - Responsive static dashboard: two simulated configurations, score chart, severity bars, searchable header filters, CORS/cookie observations, a guided demo audit, JSON/HTML/CSV downloads and print-to-PDF.
 
 ## Technology and architecture

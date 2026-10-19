@@ -23,3 +23,7 @@ GitHub CI and Pages deployment status must be assessed on the actual published c
 ## Dashboard upgrade verification
 
 The updated cobalt/navy interface was checked in Microsoft Edge on 19 October 2026. Browser checks passed for both guided demo scenarios, header search and its empty state, JSON/HTML/CSV download contents, and the Print/PDF button invoking browser printing. Duplicate element IDs were checked. Responsive checks passed at all six existing viewport widths. Desktop and mobile screenshots were refreshed. No Python engine changes or new runtime dependencies were introduced.
+
+## Light-theme redesign verification
+
+The original light-themed landing page and audit workspace were verified in Microsoft Edge on 19 October 2026. The earlier cobalt/navy design is superseded. All existing demo interactions and JSON/HTML/CSV exports passed. Checks also passed for six viewport widths (320, 390, 430, 768, 1024 and 1440 pixels), internal anchors, unique IDs, requested section counts, keyboard-operated FAQs, the light color scheme, audit-only print layout and no-JavaScript information fallback. No JavaScript errors or external runtime requests were observed. A mobile overflow discovered during development was corrected before publishing. Screenshots cover both the landing page and audit workspace. No Python engine changes or runtime dependencies were added.
