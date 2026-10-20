@@ -3,6 +3,8 @@
   const data = window.CYBERSHIELD_DEMO;
   const byId = id => document.getElementById(id);
   let selected = "baseline";
+  const siteNames = {original: "Original sample", store: "Northstar Store", portal: "Orbit Docs"};
+  const currentName = () => siteNames[byId("sample-site").value];
   const escape = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const badge = f => `<span class="badge ${f.status === "WARN" ? f.severity.toLowerCase() : f.status.toLowerCase()}">${f.status === "WARN" ? `${f.severity.toLowerCase()} · review` : f.status === "PASS" ? "Passed" : "Informational"}</span>`;
   function renderHeaders() {
@@ -15,6 +17,9 @@
   function render() {
     const result = data[selected];
     byId("sample-target").textContent = new URL(result.final_url).hostname;
+    byId("sample-response").textContent = `Sample path: ${new URL(result.final_url).pathname} | HTTP ${result.http_status}`;
+    byId("overview-title").textContent = `${currentName()} / configuration overview`;
+    byId("overview-context").textContent = `SIMULATED ${byId("scenario").value === "baseline" ? "baseline" : "improved"} findings for ${result.final_url}`;
     byId("sample-context").textContent = {original: "Original sample: deliberately incomplete headers and a session cookie needing review.", store: "Northstar Store: a fictional checkout with two cookies. Compare credentialed CORS reflection, short HSTS and cookie flags. A JavaScript-readable preferences cookie still needs context after improvements.", portal: "Orbit Docs: a fictional public documentation page with no cookies. Public wildcard CORS is intentional; the baseline needs an explicit referrer policy."}[byId("sample-site").value] + " All observations are simulated.";
     byId("score").textContent = result.score;
     byId("score-ring").style.setProperty("--score", result.score);
@@ -37,7 +42,7 @@
     const rank = {HIGH:0, MEDIUM:1, LOW:2};
     const warnings = result.findings.filter(f => f.status === "WARN").sort((a,b) => rank[a.severity] - rank[b.severity]);
     byId("recommendation-list").innerHTML = warnings.length ? warnings.map((f,i) => `<article class="recommendation"><span class="number">${String(i+1).padStart(2,"0")}</span><div><h3>${escape(f.title)}</h3><p>${escape(f.recommendation)}</p></div>${badge(f)}</article>`).join("") : '<p class="muted">No warnings in this improved fixture. Continue reviewing application behavior, policy values and authenticated routes; a score of 100 does not guarantee security.</p>';
-    byId("status").textContent = `Simulated ${selected} configuration loaded. Score ${result.score} of 100; ${result.summary.warnings} warnings.`;
+    byId("status").textContent = `${currentName()} - simulated ${byId("scenario").value} configuration loaded. Score ${result.score} of 100; ${result.summary.warnings} warnings.`;
   }
   function changeSample() {
     const site = byId("sample-site").value;
@@ -45,7 +50,7 @@
     byId("search").value = "";
     byId("filter").value = "ALL";
     render();
-    byId("demo-progress").textContent = "Sample changed | Ready to run the demo or export";
+    byId("demo-progress").textContent = `${currentName()} loaded | Score ${data[selected].score}/100 | All findings and exports updated | Simulated data`;
   }
   byId("scenario").addEventListener("change", changeSample);
   byId("sample-site").addEventListener("change", changeSample);
@@ -69,7 +74,7 @@
       await new Promise(resolve => setTimeout(resolve, 400));
     }
     render();
-    byId("demo-progress").textContent = `Demo complete | ${data[selected].summary.total_checks} checks | ${data[selected].summary.warnings} review items | No network scan performed`;
+    byId("demo-progress").textContent = `Demo complete | ${currentName()} | ${data[selected].summary.total_checks} checks | ${data[selected].summary.warnings} review items | No network scan performed`;
     byId("demo-progress").classList.remove("running");
     button.disabled = false;
     byId("scenario").disabled = false;

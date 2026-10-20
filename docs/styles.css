@@ -1848,3 +1848,7 @@ tr:last-child td {
 .target-panel { justify-content:space-between; }
 .sample-context { font-size:12px; line-height:1.8; margin-bottom:14px; }
 .cookie-observation + .cookie-observation { border-top:1px solid var(--line); margin-top:17px; padding-top:17px; }
+
+#overview-context, #sample-response { overflow-wrap:anywhere; }
+.report-toolbar > span { min-width:0; flex:1 1 270px; }
+.footer-bottom a { text-decoration:underline; text-underline-offset:3px; }

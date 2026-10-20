@@ -207,7 +207,7 @@ window.CYBERSHIELD_DEMO = {
     "final_url": "https://shop.northstar.example/checkout",
     "scanned_at": "2026-10-19T00:00:00+00:00",
     "http_status": 200,
-    "score": 43,
+    "score": 53,
     "grade": "D",
     "findings": [
       {
@@ -249,9 +249,9 @@ window.CYBERSHIELD_DEMO = {
       {
         "key": "framing",
         "title": "Anti-framing control",
-        "status": "WARN",
-        "severity": "MEDIUM",
-        "detail": "No supported anti-framing restriction was observed.",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "An X-Frame-Options restriction or CSP frame-ancestors directive was observed.",
         "recommendation": "Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.",
         "evidence": ""
       },
@@ -305,8 +305,8 @@ window.CYBERSHIELD_DEMO = {
     "elapsed_ms": 0,
     "demo": true,
     "summary": {
-      "warnings": 6,
-      "passed": 3,
+      "warnings": 5,
+      "passed": 4,
       "informational": 1,
       "total_checks": 10
     },

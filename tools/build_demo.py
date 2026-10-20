@@ -25,6 +25,7 @@ def fixtures():
     scenarios = {
         "store": ("https://shop.northstar.example/checkout", (
             ("Strict-Transport-Security", "max-age=86400"),
+            ("X-Frame-Options", "SAMEORIGIN"),
             ("X-Content-Type-Options", "nosniff"),
             ("Referrer-Policy", "strict-origin-when-cross-origin"),
             ("Set-Cookie", "cart_session=REDACTED; HttpOnly; SameSite=None"),
