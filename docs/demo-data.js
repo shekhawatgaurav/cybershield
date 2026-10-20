@@ -201,5 +201,427 @@ window.CYBERSHIELD_DEMO = {
       "total_checks": 9
     },
     "disclaimer": "Indicative, page-level configuration audit only. Not a vulnerability scan, penetration test, or security certification."
+  },
+  "store-baseline": {
+    "target_url": "https://shop.northstar.example/checkout",
+    "final_url": "https://shop.northstar.example/checkout",
+    "scanned_at": "2026-10-19T00:00:00+00:00",
+    "http_status": 200,
+    "score": 43,
+    "grade": "D",
+    "findings": [
+      {
+        "key": "https",
+        "title": "HTTPS transport",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "The observed response was delivered over HTTPS.",
+        "recommendation": "Continue enforcing HTTPS.",
+        "evidence": ""
+      },
+      {
+        "key": "hsts",
+        "title": "HSTS policy",
+        "status": "WARN",
+        "severity": "LOW",
+        "detail": "HSTS is enabled but max-age is below six months.",
+        "recommendation": "Review whether a longer HSTS max-age is suitable for your deployment.",
+        "evidence": ""
+      },
+      {
+        "key": "csp",
+        "title": "Content Security Policy",
+        "status": "WARN",
+        "severity": "MEDIUM",
+        "detail": "No enforced Content-Security-Policy response header was observed.",
+        "recommendation": "Review restrictive CSP directives, including script-src and object-src, for your application.",
+        "evidence": ""
+      },
+      {
+        "key": "nosniff",
+        "title": "MIME sniffing protection",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "X-Content-Type-Options: nosniff is present.",
+        "recommendation": "Set X-Content-Type-Options: nosniff on applicable responses.",
+        "evidence": ""
+      },
+      {
+        "key": "framing",
+        "title": "Anti-framing control",
+        "status": "WARN",
+        "severity": "MEDIUM",
+        "detail": "No supported anti-framing restriction was observed.",
+        "recommendation": "Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.",
+        "evidence": ""
+      },
+      {
+        "key": "referrer",
+        "title": "Referrer policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Referrer-Policy header is present; its value should be reviewed.",
+        "recommendation": "Consider strict-origin-when-cross-origin or stricter based on site requirements.",
+        "evidence": ""
+      },
+      {
+        "key": "permissions",
+        "title": "Browser permissions policy",
+        "status": "INFO",
+        "severity": "NONE",
+        "detail": "No Permissions-Policy header was observed. This is a hardening opportunity, not proof of a vulnerability.",
+        "recommendation": "Consider limiting browser features (camera, microphone, geolocation) when appropriate.",
+        "evidence": ""
+      },
+      {
+        "key": "cors",
+        "title": "CORS origin behavior",
+        "status": "WARN",
+        "severity": "HIGH",
+        "detail": "The server echoed an arbitrary Origin and enabled credentialed sharing on this response.",
+        "recommendation": "Use a strict trusted-origin allowlist; review endpoints containing sensitive data.",
+        "evidence": "Arbitrary origin reflected with Access-Control-Allow-Credentials: true"
+      },
+      {
+        "key": "cookie-8",
+        "title": "Cookie flags: cart_session",
+        "status": "WARN",
+        "severity": "MEDIUM",
+        "detail": "Cookie attributes need review: Secure, SameSite=None requires Secure.",
+        "recommendation": "Review Secure, HttpOnly and SameSite based on the cookie's actual purpose.",
+        "evidence": "Cookie name: cart_session"
+      },
+      {
+        "key": "cookie-9",
+        "title": "Cookie flags: store_preferences",
+        "status": "WARN",
+        "severity": "LOW",
+        "detail": "Cookie attributes need review: HttpOnly (may be intentional for JavaScript-readable cookies).",
+        "recommendation": "Review Secure, HttpOnly and SameSite based on the cookie's actual purpose.",
+        "evidence": "Cookie name: store_preferences"
+      }
+    ],
+    "redirects": [],
+    "elapsed_ms": 0,
+    "demo": true,
+    "summary": {
+      "warnings": 6,
+      "passed": 3,
+      "informational": 1,
+      "total_checks": 10
+    },
+    "disclaimer": "Indicative, page-level configuration audit only. Not a vulnerability scan, penetration test, or security certification."
+  },
+  "store-hardened": {
+    "target_url": "https://shop.northstar.example/checkout",
+    "final_url": "https://shop.northstar.example/checkout",
+    "scanned_at": "2026-10-19T00:00:00+00:00",
+    "http_status": 200,
+    "score": 95,
+    "grade": "A",
+    "findings": [
+      {
+        "key": "https",
+        "title": "HTTPS transport",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "The observed response was delivered over HTTPS.",
+        "recommendation": "Continue enforcing HTTPS.",
+        "evidence": ""
+      },
+      {
+        "key": "hsts",
+        "title": "HSTS policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A positive HSTS max-age of at least six months was observed.",
+        "recommendation": "Review subdomains and preload separately if applicable.",
+        "evidence": ""
+      },
+      {
+        "key": "csp",
+        "title": "Content Security Policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A CSP response header is present; individual directives have not been validated.",
+        "recommendation": "Review restrictive CSP directives, including script-src and object-src, for your application.",
+        "evidence": ""
+      },
+      {
+        "key": "nosniff",
+        "title": "MIME sniffing protection",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "X-Content-Type-Options: nosniff is present.",
+        "recommendation": "Set X-Content-Type-Options: nosniff on applicable responses.",
+        "evidence": ""
+      },
+      {
+        "key": "framing",
+        "title": "Anti-framing control",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "An X-Frame-Options restriction or CSP frame-ancestors directive was observed.",
+        "recommendation": "Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.",
+        "evidence": ""
+      },
+      {
+        "key": "referrer",
+        "title": "Referrer policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Referrer-Policy header is present; its value should be reviewed.",
+        "recommendation": "Consider strict-origin-when-cross-origin or stricter based on site requirements.",
+        "evidence": ""
+      },
+      {
+        "key": "permissions",
+        "title": "Browser permissions policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Permissions-Policy header was observed.",
+        "recommendation": "Consider limiting browser features (camera, microphone, geolocation) when appropriate.",
+        "evidence": ""
+      },
+      {
+        "key": "cors",
+        "title": "CORS origin behavior",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "The arbitrary Origin was not echoed with credentialed sharing on the tested response. This is not a full CORS audit.",
+        "recommendation": "Audit additional API endpoints and allowed origins separately if needed.",
+        "evidence": ""
+      },
+      {
+        "key": "cookie-8",
+        "title": "Cookie flags: cart_session",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "Secure, HttpOnly and SameSite were observed.",
+        "recommendation": "Verify attribute values align with application behavior.",
+        "evidence": "Cookie name: cart_session"
+      },
+      {
+        "key": "cookie-9",
+        "title": "Cookie flags: store_preferences",
+        "status": "WARN",
+        "severity": "LOW",
+        "detail": "Cookie attributes need review: HttpOnly (may be intentional for JavaScript-readable cookies).",
+        "recommendation": "Review Secure, HttpOnly and SameSite based on the cookie's actual purpose.",
+        "evidence": "Cookie name: store_preferences"
+      }
+    ],
+    "redirects": [],
+    "elapsed_ms": 0,
+    "demo": true,
+    "summary": {
+      "warnings": 1,
+      "passed": 9,
+      "informational": 0,
+      "total_checks": 10
+    },
+    "disclaimer": "Indicative, page-level configuration audit only. Not a vulnerability scan, penetration test, or security certification."
+  },
+  "portal-baseline": {
+    "target_url": "https://docs.orbit.example/guides/getting-started",
+    "final_url": "https://docs.orbit.example/guides/getting-started",
+    "scanned_at": "2026-10-19T00:00:00+00:00",
+    "http_status": 200,
+    "score": 95,
+    "grade": "A",
+    "findings": [
+      {
+        "key": "https",
+        "title": "HTTPS transport",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "The observed response was delivered over HTTPS.",
+        "recommendation": "Continue enforcing HTTPS.",
+        "evidence": ""
+      },
+      {
+        "key": "hsts",
+        "title": "HSTS policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A positive HSTS max-age of at least six months was observed.",
+        "recommendation": "Review subdomains and preload separately if applicable.",
+        "evidence": ""
+      },
+      {
+        "key": "csp",
+        "title": "Content Security Policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A CSP response header is present; individual directives have not been validated.",
+        "recommendation": "Review restrictive CSP directives, including script-src and object-src, for your application.",
+        "evidence": ""
+      },
+      {
+        "key": "nosniff",
+        "title": "MIME sniffing protection",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "X-Content-Type-Options: nosniff is present.",
+        "recommendation": "Set X-Content-Type-Options: nosniff on applicable responses.",
+        "evidence": ""
+      },
+      {
+        "key": "framing",
+        "title": "Anti-framing control",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "An X-Frame-Options restriction or CSP frame-ancestors directive was observed.",
+        "recommendation": "Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.",
+        "evidence": ""
+      },
+      {
+        "key": "referrer",
+        "title": "Referrer policy",
+        "status": "WARN",
+        "severity": "LOW",
+        "detail": "No explicit Referrer-Policy response header was observed.",
+        "recommendation": "Consider strict-origin-when-cross-origin or stricter based on site requirements.",
+        "evidence": ""
+      },
+      {
+        "key": "permissions",
+        "title": "Browser permissions policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Permissions-Policy header was observed.",
+        "recommendation": "Consider limiting browser features (camera, microphone, geolocation) when appropriate.",
+        "evidence": ""
+      },
+      {
+        "key": "cors",
+        "title": "CORS origin behavior",
+        "status": "INFO",
+        "severity": "NONE",
+        "detail": "Wildcard CORS sharing was observed; it may be intentional for public resources.",
+        "recommendation": "Check whether the endpoint is intended to serve public non-credentialed callers.",
+        "evidence": ""
+      },
+      {
+        "key": "cookies",
+        "title": "Cookie flags",
+        "status": "INFO",
+        "severity": "NONE",
+        "detail": "No Set-Cookie headers were observed on this response.",
+        "recommendation": "Review login and authenticated responses separately.",
+        "evidence": ""
+      }
+    ],
+    "redirects": [],
+    "elapsed_ms": 0,
+    "demo": true,
+    "summary": {
+      "warnings": 1,
+      "passed": 6,
+      "informational": 2,
+      "total_checks": 9
+    },
+    "disclaimer": "Indicative, page-level configuration audit only. Not a vulnerability scan, penetration test, or security certification."
+  },
+  "portal-hardened": {
+    "target_url": "https://docs.orbit.example/guides/getting-started",
+    "final_url": "https://docs.orbit.example/guides/getting-started",
+    "scanned_at": "2026-10-19T00:00:00+00:00",
+    "http_status": 200,
+    "score": 100,
+    "grade": "A",
+    "findings": [
+      {
+        "key": "https",
+        "title": "HTTPS transport",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "The observed response was delivered over HTTPS.",
+        "recommendation": "Continue enforcing HTTPS.",
+        "evidence": ""
+      },
+      {
+        "key": "hsts",
+        "title": "HSTS policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A positive HSTS max-age of at least six months was observed.",
+        "recommendation": "Review subdomains and preload separately if applicable.",
+        "evidence": ""
+      },
+      {
+        "key": "csp",
+        "title": "Content Security Policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A CSP response header is present; individual directives have not been validated.",
+        "recommendation": "Review restrictive CSP directives, including script-src and object-src, for your application.",
+        "evidence": ""
+      },
+      {
+        "key": "nosniff",
+        "title": "MIME sniffing protection",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "X-Content-Type-Options: nosniff is present.",
+        "recommendation": "Set X-Content-Type-Options: nosniff on applicable responses.",
+        "evidence": ""
+      },
+      {
+        "key": "framing",
+        "title": "Anti-framing control",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "An X-Frame-Options restriction or CSP frame-ancestors directive was observed.",
+        "recommendation": "Use CSP frame-ancestors, or X-Frame-Options where needed to protect interactive pages.",
+        "evidence": ""
+      },
+      {
+        "key": "referrer",
+        "title": "Referrer policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Referrer-Policy header is present; its value should be reviewed.",
+        "recommendation": "Consider strict-origin-when-cross-origin or stricter based on site requirements.",
+        "evidence": ""
+      },
+      {
+        "key": "permissions",
+        "title": "Browser permissions policy",
+        "status": "PASS",
+        "severity": "NONE",
+        "detail": "A Permissions-Policy header was observed.",
+        "recommendation": "Consider limiting browser features (camera, microphone, geolocation) when appropriate.",
+        "evidence": ""
+      },
+      {
+        "key": "cors",
+        "title": "CORS origin behavior",
+        "status": "INFO",
+        "severity": "NONE",
+        "detail": "Wildcard CORS sharing was observed; it may be intentional for public resources.",
+        "recommendation": "Check whether the endpoint is intended to serve public non-credentialed callers.",
+        "evidence": ""
+      },
+      {
+        "key": "cookies",
+        "title": "Cookie flags",
+        "status": "INFO",
+        "severity": "NONE",
+        "detail": "No Set-Cookie headers were observed on this response.",
+        "recommendation": "Review login and authenticated responses separately.",
+        "evidence": ""
+      }
+    ],
+    "redirects": [],
+    "elapsed_ms": 0,
+    "demo": true,
+    "summary": {
+      "warnings": 0,
+      "passed": 7,
+      "informational": 2,
+      "total_checks": 9
+    },
+    "disclaimer": "Indicative, page-level configuration audit only. Not a vulnerability scan, penetration test, or security certification."
   }
 };

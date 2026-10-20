@@ -14,6 +14,8 @@
   }
   function render() {
     const result = data[selected];
+    byId("sample-target").textContent = new URL(result.final_url).hostname;
+    byId("sample-context").textContent = {original: "Original sample: deliberately incomplete headers and a session cookie needing review.", store: "Northstar Store: a fictional checkout with two cookies. Compare credentialed CORS reflection, short HSTS and cookie flags. A JavaScript-readable preferences cookie still needs context after improvements.", portal: "Orbit Docs: a fictional public documentation page with no cookies. Public wildcard CORS is intentional; the baseline needs an explicit referrer policy."}[byId("sample-site").value] + " All observations are simulated.";
     byId("score").textContent = result.score;
     byId("score-ring").style.setProperty("--score", result.score);
     byId("score-ring").style.setProperty("--ring", result.score >= 90 ? "var(--green)" : "var(--amber)");
@@ -27,16 +29,26 @@
     }).join("");
     renderHeaders();
     const cors = result.findings.find(f => f.key === "cors");
-    const cookie = result.findings.find(f => f.key.startsWith("cookie-"));
-    for (const [id, f] of [["cors-content", cors], ["cookie-content", cookie]]) {
-      byId(id).innerHTML = `${badge(f)}<p>${escape(f.detail)}</p><div class="evidence">${escape(f.evidence || "No arbitrary-origin sharing observed in this simulated response.")}</div><p class="detail-note">${id === "cors-content" ? "One synthetic Origin is tested. This does not confirm sensitive data exposure." : "Only cookie names and attribute observations are reported; cookie values are omitted."}</p>`;
+    const cookies = result.findings.filter(f => f.key.startsWith("cookie"));
+    byId("cookie-content").innerHTML = "";
+    for (const [id, f] of [["cors-content", cors], ...cookies.map(f => ["cookie-content", f])]) {
+      byId(id).innerHTML = (id === "cookie-content" ? byId(id).innerHTML : "") + `<div class="cookie-observation">${badge(f)}<p>${escape(f.detail)}</p><div class="evidence">${escape(f.evidence || (id === "cors-content" ? "Review the CORS observation above in the context of this endpoint." : "No cookie values are retained."))}</div><p class="detail-note">${id === "cors-content" ? "One synthetic Origin is tested. This does not confirm sensitive data exposure." : "Only cookie names and attribute observations are reported; cookie values are omitted."}</p></div>`;
     }
     const rank = {HIGH:0, MEDIUM:1, LOW:2};
     const warnings = result.findings.filter(f => f.status === "WARN").sort((a,b) => rank[a.severity] - rank[b.severity]);
     byId("recommendation-list").innerHTML = warnings.length ? warnings.map((f,i) => `<article class="recommendation"><span class="number">${String(i+1).padStart(2,"0")}</span><div><h3>${escape(f.title)}</h3><p>${escape(f.recommendation)}</p></div>${badge(f)}</article>`).join("") : '<p class="muted">No warnings in this improved fixture. Continue reviewing application behavior, policy values and authenticated routes; a score of 100 does not guarantee security.</p>';
     byId("status").textContent = `Simulated ${selected} configuration loaded. Score ${result.score} of 100; ${result.summary.warnings} warnings.`;
   }
-  byId("scenario").addEventListener("change", event => {selected = event.target.value; render(); byId("demo-progress").textContent = "Sample configuration changed | Ready to run the demo or export";});
+  function changeSample() {
+    const site = byId("sample-site").value;
+    selected = (site === "original" ? "" : site + "-") + byId("scenario").value;
+    byId("search").value = "";
+    byId("filter").value = "ALL";
+    render();
+    byId("demo-progress").textContent = "Sample changed | Ready to run the demo or export";
+  }
+  byId("scenario").addEventListener("change", changeSample);
+  byId("sample-site").addEventListener("change", changeSample);
   byId("filter").addEventListener("change", renderHeaders);
   byId("export").disabled = false;
   function htmlReport(result) {
@@ -49,6 +61,7 @@
     const button = byId("run-demo");
     button.disabled = true;
     byId("scenario").disabled = true;
+    byId("sample-site").disabled = true;
     byId("demo-progress").classList.add("running");
     const stages = ["SIMULATION 1/3 | Loading synthetic response headers...", "SIMULATION 2/3 | Reviewing header, CORS and cookie observations...", "SIMULATION 3/3 | Preparing score and recommendations..."];
     for (const stage of stages) {
@@ -60,13 +73,14 @@
     byId("demo-progress").classList.remove("running");
     button.disabled = false;
     byId("scenario").disabled = false;
+    byId("sample-site").disabled = false;
     button.textContent = "Run demo again";
   });
   byId("export").addEventListener("click", () => {
     const result = data[selected];
     const format = byId("export-format").value;
     const csvCell = value => '"' + String(value).replace(/"/g, '""') + '"';
-    const csvRows = [["Mode", "Scenario", "Control", "Status", "Severity", "Observation", "Recommendation", "Evidence"], ...result.findings.map(f => ["SIMULATED", selected, f.title, f.status, f.severity, f.detail, f.recommendation, f.evidence])];
+    const csvRows = [["Mode", "Scenario", "Target", "Control", "Status", "Severity", "Observation", "Recommendation", "Evidence"], ...result.findings.map(f => ["SIMULATED", selected, result.final_url, f.title, f.status, f.severity, f.detail, f.recommendation, f.evidence])];
     const formats = {
       json: [JSON.stringify(result, null, 2), "application/json"],
       html: [htmlReport(result), "text/html"],

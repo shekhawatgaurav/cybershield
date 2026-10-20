@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from cybershield.scanner import ResponseSnapshot, build_result, demo_result
+from cybershield.scanner import PROBE_ORIGIN, ResponseSnapshot, build_result, demo_result
 from cybershield.reports import to_html, to_json
 
 
@@ -21,8 +21,46 @@ def fixtures():
         ("Permissions-Policy", "camera=(), microphone=()"),
         ("Set-Cookie", "demo_session=REDACTED; Secure; HttpOnly; SameSite=Lax"),
     )), ResponseSnapshot(url, 200, ()), demo=True)
+    samples = {"baseline": baseline, "hardened": hardened}
+    scenarios = {
+        "store": ("https://shop.northstar.example/checkout", (
+            ("Strict-Transport-Security", "max-age=86400"),
+            ("X-Content-Type-Options", "nosniff"),
+            ("Referrer-Policy", "strict-origin-when-cross-origin"),
+            ("Set-Cookie", "cart_session=REDACTED; HttpOnly; SameSite=None"),
+            ("Set-Cookie", "store_preferences=REDACTED; Secure; SameSite=Lax"),
+        ), (("Access-Control-Allow-Origin", PROBE_ORIGIN),
+            ("Access-Control-Allow-Credentials", "true"))),
+        "portal": ("https://docs.orbit.example/guides/getting-started", (
+            ("Strict-Transport-Security", "max-age=31536000"),
+            ("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'"),
+            ("X-Content-Type-Options", "nosniff"),
+            ("Permissions-Policy", "camera=(), microphone=()"),
+        ), (("Access-Control-Allow-Origin", "*"),)),
+    }
+    for name, (target, headers, cors) in scenarios.items():
+        samples[name + "-baseline"] = build_result(
+            target, ResponseSnapshot(target, 200, headers),
+            ResponseSnapshot(target, 200, cors), demo=True)
+        fixed_headers = (
+            ("Strict-Transport-Security", "max-age=31536000"),
+            ("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'"),
+            ("X-Content-Type-Options", "nosniff"),
+            ("Referrer-Policy", "strict-origin-when-cross-origin"),
+            ("Permissions-Policy", "camera=(), microphone=()"),
+        )
+        if name == "store":
+            fixed_headers += (
+                ("Set-Cookie", "cart_session=REDACTED; Secure; HttpOnly; SameSite=Lax"),
+                ("Set-Cookie", "store_preferences=REDACTED; Secure; SameSite=Lax"),
+            )
+        # Public documentation can intentionally allow non-credentialed CORS.
+        fixed_cors = cors if name == "portal" else ()
+        samples[name + "-hardened"] = build_result(
+            target, ResponseSnapshot(target, 200, fixed_headers),
+            ResponseSnapshot(target, 200, fixed_cors), demo=True)
     return {key: replace(value, scanned_at="2026-10-19T00:00:00+00:00")
-            for key, value in {"baseline": baseline, "hardened": hardened}.items()}
+            for key, value in samples.items()}
 
 
 if __name__ == "__main__":

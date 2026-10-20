@@ -1841,3 +1841,10 @@ tr:last-child td {
     break-inside:avoid;
   }
 }
+
+/* Fictional site fixtures share the same assessment and report workflow. */
+.target strong { overflow-wrap:anywhere; }
+.target-panel .scenario { margin-left:0; }
+.target-panel { justify-content:space-between; }
+.sample-context { font-size:12px; line-height:1.8; margin-bottom:14px; }
+.cookie-observation + .cookie-observation { border-top:1px solid var(--line); margin-top:17px; padding-top:17px; }

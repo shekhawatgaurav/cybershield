@@ -27,3 +27,7 @@ The updated cobalt/navy interface was checked in Microsoft Edge on 19 October 20
 ## Light-theme redesign verification
 
 The original light-themed landing page and audit workspace were verified in Microsoft Edge on 19 October 2026. The earlier cobalt/navy design is superseded. All existing demo interactions and JSON/HTML/CSV exports passed. Checks also passed for six viewport widths (320, 390, 430, 768, 1024 and 1440 pixels), internal anchors, unique IDs, requested section counts, keyboard-operated FAQs, the light color scheme, audit-only print layout and no-JavaScript information fallback. No JavaScript errors or external runtime requests were observed. A mobile overflow discovered during development was corrected before publishing. Screenshots cover both the landing page and audit workspace. No Python engine changes or runtime dependencies were added.
+
+## Fictional website fixtures
+
+On 20 October 2026, browser checks passed for Northstar Store and Orbit Docs in both baseline and improved configurations: scores match Python-generated data, target labels and JSON exports match the selected site, both store cookies render, the no-cookie portal observation renders, and no cookie values appear in exports. Demo execution and 320/390/768/1440px overflow checks passed. The existing export/search/demo regression checks also passed. These fixtures are fictional `.example` domains and send no target requests.

@@ -27,7 +27,7 @@ The public demo uses **simulated findings only**. It never accepts target URLs o
 - JSON and self-contained HTML reports, severity labels and recommendations.
 - Local Streamlit dashboard with authorization confirmation and an offline demo.
 - Light-themed landing page with capabilities, workflow, methodology, resources and accessible FAQs.
-- Responsive static dashboard: two simulated configurations, score chart, severity bars, searchable header filters, CORS/cookie observations, a guided demo audit, JSON/HTML/CSV downloads and print-to-PDF.
+- Responsive static dashboard: three fictional website fixtures with before/after configurations, score chart, severity bars, searchable header filters, CORS/cookie observations, a guided demo audit, JSON/HTML/CSV downloads and print-to-PDF.
 
 ## Technology and architecture
 
@@ -98,7 +98,7 @@ Regenerate the sample data after changing assessment logic:
 python tools/build_demo.py
 ```
 
-The fixture date is fixed for reproducibility, not a real scan timestamp. The baseline has score 43 (D), 5 warnings, 3 passed observations and 1 informational observation. The improved fixture has score 100 with 9 passed observations. Both are fictional; neither establishes real website security.
+The fixture date is fixed for reproducibility, not a real scan timestamp. The baseline has score 43 (D), 5 warnings, 3 passed observations and 1 informational observation. The improved original fixture has score 100 with 9 passed observations. Additional fictional websites are Northstar Store (`shop.northstar.example/checkout`, scores 43/95) and Orbit Docs (`docs.orbit.example/guides/getting-started`, scores 95/100). The store retains a context-dependent JavaScript-readable preferences-cookie warning; the public documentation fixture intentionally allows non-credentialed wildcard CORS and sets no cookies. All are simulated; none establishes real website security.
 
 ## Tests and verification
 
