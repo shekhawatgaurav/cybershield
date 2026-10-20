@@ -82,7 +82,7 @@ Replace the example URL with your explicitly authorized target. Live CLI scans r
 
 Source: **main**, directory **/docs**, entry point **docs/index.html**.
 
-[Open CyberShield](https://shekhawatgaurav.github.io/cybershield/). The static demo works without a Python backend. Assets use relative paths, with no CDN, analytics, external font or runtime API dependencies. Scores and findings come from generated Python fixtures; switching scenarios makes no network request.
+[Open CyberShield](https://shekhawatgaurav.github.io/cybershield/). The static demo works without a Python backend. Assets use relative paths, with no CDN, analytics, external font or runtime API dependencies. Scores and findings come from generated Python fixtures; switching scenarios makes no network request. Results remain hidden until **Run demo audit** is pressed. A short, explicitly simulated sequence reveals headers, CORS/cookies, recommendations and the score in stages. Downloads and printing become available on completion; changing the sample clears the previous results.
 
 To preview locally:
 

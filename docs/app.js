@@ -3,6 +3,20 @@
   const data = window.CYBERSHIELD_DEMO;
   const byId = id => document.getElementById(id);
   let selected = "baseline";
+  let completed = false;
+  let running = false;
+  const resultSections = ["report-toolbar", "audit-summary", "headers", "access", "recommendations"];
+  function resetAudit() {
+    completed = false;
+    for (const id of resultSections) byId(id).hidden = true;
+    byId("audit-waiting").hidden = false;
+    byId("audit-stages").hidden = true;
+    byId("audit-stages").replaceChildren();
+    byId("status").textContent = "";
+    byId("export").disabled = true;
+    byId("print").disabled = true;
+    byId("run-demo").textContent = "Run demo audit";
+  }
   const siteNames = {original: "Original sample", store: "Northstar Store", portal: "Orbit Docs"};
   const currentName = () => siteNames[byId("sample-site").value];
   const escape = value => String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -42,46 +56,91 @@
     const rank = {HIGH:0, MEDIUM:1, LOW:2};
     const warnings = result.findings.filter(f => f.status === "WARN").sort((a,b) => rank[a.severity] - rank[b.severity]);
     byId("recommendation-list").innerHTML = warnings.length ? warnings.map((f,i) => `<article class="recommendation"><span class="number">${String(i+1).padStart(2,"0")}</span><div><h3>${escape(f.title)}</h3><p>${escape(f.recommendation)}</p></div>${badge(f)}</article>`).join("") : '<p class="muted">No warnings in this improved fixture. Continue reviewing application behavior, policy values and authenticated routes; a score of 100 does not guarantee security.</p>';
-    byId("status").textContent = `${currentName()} - simulated ${byId("scenario").value} configuration loaded. Score ${result.score} of 100; ${result.summary.warnings} warnings.`;
+
   }
   function changeSample() {
     const site = byId("sample-site").value;
     selected = (site === "original" ? "" : site + "-") + byId("scenario").value;
     byId("search").value = "";
     byId("filter").value = "ALL";
-    render();
-    byId("demo-progress").textContent = `${currentName()} loaded | Score ${data[selected].score}/100 | All findings and exports updated | Simulated data`;
+    resetAudit();
+    byId("sample-target").textContent = new URL(data[selected].final_url).hostname;
+    byId("sample-response").textContent = `Sample path: ${new URL(data[selected].final_url).pathname}`;
+    byId("sample-context").textContent = `${currentName()} is a fictional sample website. Run the demo to review its simulated response configuration.`;
+    byId("demo-progress").textContent = `${currentName()} selected | Ready to run | Results not yet revealed`;
   }
   byId("scenario").addEventListener("change", changeSample);
   byId("sample-site").addEventListener("change", changeSample);
   byId("filter").addEventListener("change", renderHeaders);
-  byId("export").disabled = false;
+  byId("export").disabled = true;
   function htmlReport(result) {
     const rows = result.findings.map(f => `<article><h2>${escape(f.title)} <small>${escape(f.status)} / ${escape(f.severity)}</small></h2><p>${escape(f.detail)}</p><p><b>Recommendation:</b> ${escape(f.recommendation)}</p>${f.evidence ? `<p><b>Evidence:</b> ${escape(f.evidence)}</p>` : ""}</article>`).join("");
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CyberShield simulated audit report</title><style>body{font:15px/1.7 system-ui,sans-serif;color:#172436;max-width:960px;margin:40px auto;padding:0 24px}header{border-bottom:3px solid #126b5a;padding-bottom:24px}h1{font-size:32px}h2{font-size:18px}small{font-size:12px;color:#53657c}article{border-bottom:1px solid #ccd5e1;padding:16px 0;break-inside:avoid}.notice{padding:12px;background:#edf5eb}footer{margin:30px 0;color:#53657c}@media print{body{margin:0}}</style></head><body><header><small>CYBERSHIELD / AUTOMATED WEB SCANNER</small><h1>Security configuration report</h1><p class="notice"><strong>SIMULATED DATA.</strong> No real website was scanned. Scenario: ${escape(selected)}.</p><p>Sample target: ${escape(result.final_url)}<br>Configuration score: <b>${result.score}/100 | Grade ${escape(result.grade)}</b><br>Checks: ${result.summary.total_checks} | Warnings: ${result.summary.warnings} | Passed: ${result.summary.passed}</p></header>${rows}<footer>${escape(result.disclaimer)}<p>Scoring: start at 100; subtract 17 per high, 10 per medium and 5 per low warning, with a floor of zero. Fixture date: ${escape(result.scanned_at)} (not a live scan timestamp).</p></footer></body></html>`;
   }
   byId("search").addEventListener("input", renderHeaders);
-  byId("print").addEventListener("click", () => window.print());
+  byId("print").addEventListener("click", () => { if (completed) window.print(); });
   byId("run-demo").addEventListener("click", async () => {
+    if (running) return;
+    resetAudit();
+    running = true;
     const button = byId("run-demo");
     button.disabled = true;
+    button.textContent = "Running simulation...";
     byId("scenario").disabled = true;
     byId("sample-site").disabled = true;
     byId("demo-progress").classList.add("running");
-    const stages = ["SIMULATION 1/3 | Loading synthetic response headers...", "SIMULATION 2/3 | Reviewing header, CORS and cookie observations...", "SIMULATION 3/3 | Preparing score and recommendations..."];
-    for (const stage of stages) {
-      byId("demo-progress").textContent = stage;
-      await new Promise(resolve => setTimeout(resolve, 400));
+    byId("audit-waiting").hidden = true;
+    byId("audit-stages").hidden = false;
+    const stages = [
+      ["Loading sample response", "Sample response ready. No target request sent.", null],
+      ["Checking HTTPS and security headers", "Header observations ready.", "headers"],
+      ["Reviewing CORS and cookie attributes", "CORS and cookie observations ready.", "access"],
+      ["Prioritizing review items", "Recommendations prepared.", "recommendations"],
+      ["Calculating configuration score", "Overview and downloads ready.", "audit-summary"]
+    ];
+    try {
+      for (let index = 0; index < stages.length; index++) {
+        const [checking, finished, section] = stages[index];
+        const row = document.createElement("li");
+        row.className = "stage-active";
+        row.textContent = `${index + 1}. ${checking}...`;
+        byId("audit-stages").append(row);
+        byId("demo-progress").textContent = `SIMULATION ${index + 1}/${stages.length} | ${checking}...`;
+        await new Promise(resolve => setTimeout(resolve, 850));
+        if (index === 0) render();
+        if (section) {
+          byId(section).hidden = false;
+          byId(section).classList.remove("result-reveal");
+          void byId(section).offsetWidth;
+          byId(section).classList.add("result-reveal");
+        }
+        row.className = "stage-done";
+        const observed = data[selected].findings.filter(f => section === "headers" ? f.key !== "cors" && !f.key.startsWith("cookie") : section === "access" ? f.key === "cors" || f.key.startsWith("cookie") : false);
+        const detail = observed.length ? ` Found ${observed.length} observations; ${observed.filter(f => f.status === "WARN").length} need review.` : "";
+        row.textContent = `${index + 1}. ${finished}${detail}`;
+      }
+      completed = true;
+      byId("report-toolbar").hidden = false;
+      byId("export").disabled = false;
+      byId("print").disabled = false;
+      const message = `Demo complete | ${currentName()} | ${data[selected].summary.total_checks} checks | ${data[selected].summary.warnings} review items | No network scan performed`;
+      byId("demo-progress").textContent = message;
+      byId("status").textContent = message;
+    } catch (error) {
+      resetAudit();
+      byId("demo-progress").textContent = "Demo could not finish. Please retry.";
+      console.error(error);
+    } finally {
+      running = false;
+      button.disabled = false;
+      byId("scenario").disabled = false;
+      byId("sample-site").disabled = false;
+      byId("demo-progress").classList.remove("running");
+      button.textContent = completed ? "Run demo again" : "Run demo audit";
     }
-    render();
-    byId("demo-progress").textContent = `Demo complete | ${currentName()} | ${data[selected].summary.total_checks} checks | ${data[selected].summary.warnings} review items | No network scan performed`;
-    byId("demo-progress").classList.remove("running");
-    button.disabled = false;
-    byId("scenario").disabled = false;
-    byId("sample-site").disabled = false;
-    button.textContent = "Run demo again";
   });
   byId("export").addEventListener("click", () => {
+    if (!completed) return;
     const result = data[selected];
     const format = byId("export-format").value;
     const csvCell = value => '"' + String(value).replace(/"/g, '""') + '"';
@@ -109,5 +168,5 @@
   }
   window.addEventListener("hashchange", updateNavigation);
   updateNavigation();
-  render();
+  changeSample();
 })();

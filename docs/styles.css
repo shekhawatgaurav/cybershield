@@ -1852,3 +1852,16 @@ tr:last-child td {
 #overview-context, #sample-response { overflow-wrap:anywhere; }
 .report-toolbar > span { min-width:0; flex:1 1 270px; }
 .footer-bottom a { text-decoration:underline; text-underline-offset:3px; }
+
+.audit-waiting { padding:36px 20px; margin:20px 0; border:1px dashed #bdd1c3; border-radius:10px; text-align:center; background:#f8fbf7; }
+.audit-waiting > svg { width:30px; height:30px; color:var(--teal); margin-bottom:12px; }
+.audit-waiting h3 { margin-bottom:8px; }
+.audit-waiting p { margin:0; font-size:12px; }
+.audit-stages { list-style:none; padding:16px; margin:18px 0; background:#fff; border:1px solid var(--line); border-radius:8px; }
+.audit-stages li { padding:7px 0; font:11px/1.7 Consolas,monospace; }
+.stage-active { color:var(--teal); font-weight:600; }
+.stage-done { color:#5c7566; }
+.result-reveal { animation:reveal-result .4s ease-out; }
+@keyframes reveal-result { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@media(prefers-reduced-motion:reduce) { .result-reveal { animation:none; } }
+@media print { .audit-waiting,.audit-stages { display:none!important; } }
