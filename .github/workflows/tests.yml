@@ -24,6 +24,7 @@ jobs:
       - name: Check static JavaScript syntax
         run: |
           node --check docs/app.js
+          node --check docs/loader.js
           node --check docs/demo-data.js
       - name: Verify generated fixtures are current
         run: |

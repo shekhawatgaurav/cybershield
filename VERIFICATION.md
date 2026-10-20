@@ -39,3 +39,7 @@ On 20 October 2026, browser assertions confirmed that changing the website or co
 ## Progressive demo reveal
 
 On 20 October 2026, browser checks passed for initially hidden results, reset on sample changes and reruns, staged section visibility, disabled controls during execution, download gating, all four store/portal variants, correct exported targets, and 320/390/768/1440px layouts. A complete demo shows its findings over five explicitly simulated stages. No external target requests are made.
+
+## Opening screen
+
+On 20 October 2026, browser checks verified the three-second branded loader, mobile width, page unlock after completion, reduced-motion support, no-JavaScript fallback, removal of the requested footer tagline, and successful demo execution afterwards. The loader is independent of the dashboard script and releases the page after its timer.

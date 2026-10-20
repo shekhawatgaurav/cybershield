@@ -7,10 +7,22 @@
   <meta name="theme-color" content="#f7faf7">
   <title>CyberShield | Website security, made clear.</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="loader.js"></script>
   <script src="demo-data.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
+<div class="site-loader" role="status" aria-live="polite" aria-label="Loading CyberShield">
+  <div class="loader-glow" aria-hidden="true"></div>
+  <div class="loader-emblem" aria-hidden="true">
+    <div class="loader-orbit orbit-outer"></div><div class="loader-orbit orbit-inner"></div>
+    <svg viewBox="0 0 64 72"><path class="loader-shield" d="M32 5 9 14v19c0 17 23 32 23 32s23-15 23-32V14Z"/><path class="loader-check" d="m21 34 8 8 15-18"/></svg>
+  </div>
+  <div class="loader-brand">CyberShield<span>.</span></div>
+  <div class="loader-caption">PREPARING YOUR WORKSPACE</div>
+  <div class="loader-track" aria-hidden="true"><span></span></div>
+</div>
+<div id="site-content">
 <a class="skip" href="#overview">Skip to main content</a>
 <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
@@ -110,5 +122,6 @@
 </div></section>
 <section class="closing container"><span class="eyebrow">MAKE SECURITY EASIER TO UNDERSTAND</span><h2>Start with a clearer picture.</h2><p>Explore the observations. Read the source. Learn what to review next.</p><a class="button" href="#dashboard">Try the interactive demo <svg class="icon"><use href="#i-arrow"/></svg></a></section>
 </main>
-<footer class="site-footer"><div class="container"><div class="footer-top"><a class="brand" href="#overview"><span class="brand-mark"><svg><use href="#i-shield"/></svg></span>CyberShield.</a><p>Website security configuration,<br>made easier to understand.</p><div><a href="https://github.com/shekhawatgaurav/cybershield">GitHub &#8599;</a><a href="https://github.com/shekhawatgaurav/cybershield/blob/main/cybershield-project-report.pdf">Project report &#8599;</a><a href="#methodology">Ethical use</a></div></div><div class="footer-bottom"><span>&copy; 2026 CyberShield &middot; Developed by <a href="https://github.com/shekhawatgaurav">Gaurav Shekhawat</a></span><span>Audit only systems you own or are authorized to assess.</span></div></div></footer>
+<footer class="site-footer"><div class="container"><div class="footer-top"><a class="brand" href="#overview"><span class="brand-mark"><svg><use href="#i-shield"/></svg></span>CyberShield.</a><div><a href="https://github.com/shekhawatgaurav/cybershield">GitHub &#8599;</a><a href="https://github.com/shekhawatgaurav/cybershield/blob/main/cybershield-project-report.pdf">Project report &#8599;</a><a href="#methodology">Ethical use</a></div></div><div class="footer-bottom"><span>&copy; 2026 CyberShield &middot; Developed by <a href="https://github.com/shekhawatgaurav">Gaurav Shekhawat</a></span><span>Audit only systems you own or are authorized to assess.</span></div></div></footer>
+</div>
 </body></html>
